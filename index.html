@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product Entry</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+    }
+
+    .left-section {
+      flex: 1;
+      background: url('https://images.unsplash.com/photo-1517430816045-df4b7de11d1d') no-repeat center center/cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .left-section h1 {
+      font-size: 2em;
+    }
+
+    .right-section {
+      flex: 1;
+      background-color: #1f1f1f;
+      color: white;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-container {
+      max-width: 400px;
+      margin: auto;
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #f4f4f4;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      margin-top: 5px;
+    }
+
+    .btn {
+      background-color: #ffc107;
+      color: #000;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 25px;
+      margin: 10px 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn:hover {
+      background-color: #ffca2c;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    li {
+      background-color: #2c2c2c;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+
+      .left-section, .right-section {
+        flex: 1;
+        width: 100%;
+        height: 50vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="left-section">
+    <div>
+      <h1>Earn Money Online<br><span style="color: #ffc107;">Add & Sort Products</span></h1>
+      <p>Simple form to enter product data and sort by price</p>
+    </div>
+  </div>
+
+  <div class="right-section">
+    <div class="form-container">
+      <h2>Enter Product Info</h2>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" id="name">
+      </div>
+      <div class="form-group">
+        <label>Address</label>
+        <input type="text" id="address">
+      </div>
+      <div class="form-group">
+        <label>Product Name</label>
+        <input type="text" id="product">
+      </div>
+      <div class="form-group">
+        <label>Price</label>
+        <input type="number" id="price">
+      </div>
+      <button class="btn" onclick="addItem()">Add</button>
+      <button class="btn" onclick="sortAsc()">Sort Low-High</button>
+      <button class="btn" onclick="sortDesc()">Sort High-Low</button>
+
+      <ul id="productList"></ul>
+    </div>
+  </div>
+
+  <script>
+    let products = [];
+  
+    function addItem() {
+      const name = document.getElementById("name").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const product = document.getElementById("product").value.trim();
+      const price = parseFloat(document.getElementById("price").value);
+  
+      if (name && address && product && !isNaN(price)) {
+        products.push({ name, address, product, price });
+        displayProducts();
+        clearFields();
+      } else {
+        alert("Please fill all fields correctly.");
+      }
+    }
+  
+    function sortAsc() {
+      for (let i = 0; i < products.length - 1; i++) {
+        let minIndex = i;
+        for (let j = i + 1; j < products.length; j++) {
+          if (products[j].price < products[minIndex].price) {
+            minIndex = j;
+          }
+        }
+        if (minIndex !== i) {
+          [products[i], products[minIndex]] = [products[minIndex], products[i]];
+        }
+      }
+      displayProducts();
+    }
+  
+    function sortDesc() {
+      for (let i = 0; i < products.length - 1; i++) {
+        let maxIndex = i;
+        for (let j = i + 1; j < products.length; j++) {
+          if (products[j].price > products[maxIndex].price) {
+            maxIndex = j;
+          }
+        }
+        if (maxIndex !== i) {
+          [products[i], products[maxIndex]] = [products[maxIndex], products[i]];
+        }
+      }
+      displayProducts();
+    }
+  
+    function displayProducts() {
+      const list = document.getElementById("productList");
+      list.innerHTML = "";
+      products.forEach(p => {
+        list.innerHTML += `<li><strong>${p.product}</strong> - Rs. ${p.price}</li>`;
+      });
+    }
+  
+    function clearFields() {
+      document.getElementById("name").value = "";
+      document.getElementById("address").value = "";
+      document.getElementById("product").value = "";
+      document.getElementById("price").value = "";
+    }
+  </script>
+  
+</body>
+</html>
